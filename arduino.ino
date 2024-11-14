@@ -11,12 +11,31 @@ void setup() {
 }
 
 void loop() {
-    // Check for serial input
     if (Serial.available() > 0) {
         char input = Serial.read();
         if (input == 's' || input == 'S') {
+            // Take one final/initial reading when toggling
+            for (int i = 0; i < SAMPLES; i++) {
+                readings[i] = analogRead(GSR);
+                delay(5);
+            }
+            
+            // Sort the readings
+            for (int i = 0; i < SAMPLES - 1; i++) {
+                for (int j = 0; j < SAMPLES - i - 1; j++) {
+                    if (readings[j] > readings[j + 1]) {
+                        int temp = readings[j];
+                        readings[j] = readings[j + 1];
+                        readings[j + 1] = temp;
+                    }
+                }
+            }
+            
+            int medianGSR = readings[SAMPLES / 2];
+            
             isRunning = !isRunning;
-            Serial.println(isRunning ? "Starting data collection..." : "Stopping data collection...");
+            Serial.print(isRunning ? "Starting data collection... Median GSR: " : "Stopping data collection... Final Median GSR: ");
+            Serial.println(medianGSR);
         }
     }
 
