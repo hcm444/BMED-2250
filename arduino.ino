@@ -38,12 +38,16 @@ void loop() {
             }
             
             isRunning = !isRunning;
-            Serial.print(isRunning ? "Starting data collection... Median GSR: " : "Stopping data collection... Final Median GSR: ");
-            Serial.println(human_resistance);
+            if (!isRunning) {
+                Serial.print("Final Median Resistance: ");
+                Serial.println(human_resistance);
+            } else {
+                Serial.println("Starting data collection...");
+            }
         }
     }
 
-    // Only collect and send data if isRunning is true
+    // Only collect and process data if isRunning is true
     if (isRunning) {
         // Collect readings into array instead of immediate averaging
         for (int i = 0; i < SAMPLES; i++) {
@@ -90,11 +94,6 @@ void loop() {
         if (516 - gsr_average != 0) {
             human_resistance = abs(((1024 + 2 * gsr_average) * 10000) / (516 - gsr_average));
         }
-
-        // Output median and processed resistance value
-        Serial.print(Q2);
-        Serial.print(",");
-        Serial.println(human_resistance);
     }
 
     delay(50);  // Delay for readability in plotter
