@@ -32,10 +32,14 @@ void loop() {
             }
             
             int medianGSR = readings[SAMPLES / 2];
+            int human_resistance = 0;
+            if (516 - medianGSR != 0) {
+                human_resistance = abs(((1024 + 2 * medianGSR) * 10000) / (516 - medianGSR));
+            }
             
             isRunning = !isRunning;
             Serial.print(isRunning ? "Starting data collection... Median GSR: " : "Stopping data collection... Final Median GSR: ");
-            Serial.println(medianGSR);
+            Serial.println(human_resistance);
         }
     }
 
