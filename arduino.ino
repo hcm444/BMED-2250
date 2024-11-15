@@ -98,6 +98,3 @@ void loop() {
 
     delay(50);  // Delay for readability in plotter
 }
-
-
-
